@@ -1,7 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 34 // Стандарт для современных APK
+    // ВОТ ЭТА СТРОКА РЕШИТ ОШИБКУ:
+    namespace "com.cloudchat.app"
+    
+    compileSdkVersion 34
 
     signingConfigs {
         release {
@@ -46,7 +49,6 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // Прописываем версии напрямую, чтобы не искать их в переменных
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.core:core-ktx:1.12.0"
     implementation project(':capacitor-android')
@@ -64,5 +66,5 @@ try {
         apply plugin: 'com.google.gms.google-services'
     }
 } catch(Exception e) {
-    // Игнорируем, если Google Services не настроены
+    // Игнорируем
 }
