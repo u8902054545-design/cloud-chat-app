@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    // ВОТ ЭТА СТРОКА РЕШИТ ОШИБКУ:
     namespace "com.cloudchat.app"
     
-    compileSdkVersion 34
+    // Установлено SDK 36, как требовали логи ошибки
+    compileSdkVersion 36
 
     signingConfigs {
         release {
@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId "com.cloudchat.app"
         minSdkVersion 22
-        targetSdkVersion 34
+        targetSdkVersion 36
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -49,10 +49,15 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    
+    // Стабильные версии библиотек
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.core:core-ktx:1.12.0"
+    implementation "androidx.activity:activity:1.8.0"
+    
     implementation project(':capacitor-android')
     implementation project(':capacitor-cordova-android-plugins')
+    
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.5"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
@@ -66,5 +71,5 @@ try {
         apply plugin: 'com.google.gms.google-services'
     }
 } catch(Exception e) {
-    // Игнорируем
+    // Игнорируем отсутствие Google Services
 }
