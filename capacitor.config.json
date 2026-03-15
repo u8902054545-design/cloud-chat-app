@@ -1,0 +1,5 @@
+{
+  "appId": "com.cloudchat.app",
+  "appName": "Cloud Chat",
+  "webDir": "dist"
+}
