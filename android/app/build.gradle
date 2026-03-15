@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     
-    // 1. Конфигурация подписи ключом
+    // Конфигурация подписи ключом
     signingConfigs {
         release {
             storeFile file('my-release-key.jks')
@@ -20,26 +20,23 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        inlineResourceDotRes false
     }
 
     buildTypes {
         release {
-            // 2. Применяем подпись для релизной сборки
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            // Применяем ту же подпись для дебаг версии, чтобы можно было обновлять приложение
             signingConfig signingConfigs.release
         }
     }
 
-    // Для поддержки Java 17/21
+    // Совместимость с Java 21 (под версию в GitHub Actions)
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 }
 
