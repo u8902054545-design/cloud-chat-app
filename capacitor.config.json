@@ -1,5 +1,15 @@
 {
   "appId": "com.cloudchat.app",
   "appName": "Cloud Chat AI",
-  "webDir": "dist"
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 3000,
+      "launchAutoHide": true,
+      "backgroundColor": "#1e1e2e",
+      "androidScaleType": "CENTER_CROP",
+      "androidSplashResourceName": "splash_logo",
+      "androidAnimation": "@anim/fade_in_logo"
+    }
+  }
 }
