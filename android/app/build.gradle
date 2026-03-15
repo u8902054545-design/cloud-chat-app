@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    
-    // Конфигурация подписи ключом
+    compileSdkVersion 34 // Стандарт для современных APK
+
     signingConfigs {
         release {
             storeFile file('my-release-key.jks')
@@ -15,8 +14,8 @@ android {
 
     defaultConfig {
         applicationId "com.cloudchat.app"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 22
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -33,7 +32,6 @@ android {
         }
     }
 
-    // Совместимость с Java 21 (под версию в GitHub Actions)
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
@@ -48,12 +46,14 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "androidx.appcompat:appcompat:$rootProject.ext.appCompatVersion"
+    // Прописываем версии напрямую, чтобы не искать их в переменных
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.core:core-ktx:1.12.0"
     implementation project(':capacitor-android')
     implementation project(':capacitor-cordova-android-plugins')
-    testImplementation "junit:junit:$rootProject.ext.junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$rootProject.ext.androidxJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.ext.androidxEspressoCoreVersion"
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
 }
 
 apply from: 'capacitor.build.gradle'
@@ -64,5 +64,5 @@ try {
         apply plugin: 'com.google.gms.google-services'
     }
 } catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+    // Игнорируем, если Google Services не настроены
 }
