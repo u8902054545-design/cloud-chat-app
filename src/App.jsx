@@ -77,7 +77,7 @@ const App = () => {
   const t = TRANSLATIONS[lang];
 
   const [chats, setChats] = useState([
-    { id: '1', title: 'Default Chat', messages: [] }
+    { id: '1', title: TRANSLATIONS['ru'].newChat, messages: [] }
   ]);
   const [activeChatId, setActiveChatId] = useState('1');
   const [inputText, setInputText] = useState('');
@@ -164,7 +164,7 @@ const App = () => {
     const newId = Date.now().toString();
     const newChat = {
       id: newId,
-      title: `${t.newChat} #${chats.length + 1}`,
+      title: t.newChat,
       messages: []
     };
     setChats(prev => [newChat, ...prev]);
@@ -185,6 +185,27 @@ const App = () => {
       setCopiedCodeId(id);
       setTimeout(() => setCopiedCodeId(null), 2000);
     });
+  };
+
+  // Logic to update chat title based on context
+  const updateChatTitle = async (chatId, userMessage) => {
+    const prompt = `Create a very short title (max 5 words) for a chat that starts with this message: "${userMessage}". Output ONLY the title text, no quotes, no period. Language: ${lang === 'ru' ? 'Russian' : 'English'}.`;
+    
+    try {
+      const response = await fetch(SUPABASE_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt })
+      });
+      const data = await response.json();
+      const newTitle = data.choices?.[0]?.message?.content?.trim() || userMessage.substring(0, 20);
+      
+      setChats(prev => prev.map(c => 
+        c.id === chatId ? { ...c, title: newTitle } : c
+      ));
+    } catch (e) {
+      console.error("Failed to update title", e);
+    }
   };
 
   const generateSuggestions = async (lastMessage) => {
@@ -213,6 +234,7 @@ const App = () => {
 
     const userText = textToSend;
     const currentChatId = activeChatId;
+    const isFirstMessage = activeChat?.messages.length === 0;
 
     setChats(prev => prev.map(c => 
       c.id === currentChatId 
@@ -250,6 +272,12 @@ const App = () => {
             ? { ...c, messages: [...c.messages, { role: 'assistant', text: aiText, suggestions, isNew: true }] }
             : c
         ));
+
+        // Trigger title update if it's the first exchange
+        if (isFirstMessage) {
+            updateChatTitle(currentChatId, userText);
+        }
+
       } catch (error) {
         if (retries > 0) {
           setTimeout(() => fetchWithRetry(retries - 1, delay * 2), delay);
@@ -447,7 +475,7 @@ const App = () => {
               </button>
             )}
             <h2 className="font-bold text-sm text-white truncate pr-4">
-              {activeChat?.title || "Cloud Chat"}
+              {activeChat?.title || t.newChat}
             </h2>
           </div>
           
@@ -687,3 +715,4 @@ const App = () => {
 };
 
 export default App;
+
